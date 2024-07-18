@@ -4,7 +4,8 @@ import { getFirestore, doc, onSnapshot } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
+import type { Readable } from "svelte/motion";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -82,3 +83,25 @@ export function docStore<T>(path: string) {
     id: docRef.id,
   };
 }
+
+/*
+Derived function that takes two or more stores and combine them into a single store
+In this case it takes user store as starting value which provides the user information
+If user is logged in userData returns subscripton to docStore with userid 
+which allows to access user information all across the app
+*/
+
+interface UserData {
+  username: string;
+  bio: string;
+  photoURL: string;
+  links: any[];
+}
+
+export const userData: Readable<UserData | null> = derived(user, ($user, set: any) => {
+  if ($user) {
+    return docStore(`users/${$user.uid}`).subscribe(set);
+  } else {
+    set(null);
+    }
+});
