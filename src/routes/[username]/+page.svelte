@@ -24,7 +24,7 @@
     />
 
     <p class="text-xl mt-4">{data.bio ?? "No bio yet..."}</p>
-    <ul class="list-none">
+    <ul class="list-none mt-4">
         {#each data.links as item}
             <li>
                 <UserLink {...item} />
