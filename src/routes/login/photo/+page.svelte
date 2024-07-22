@@ -32,7 +32,7 @@
         <div class="form-control w-full max-w-xs mx-auto text-center">
             <!-- TODO Bug fix: This section loads wrong img from database if user prev uploaded custom one -->
             <img 
-                src={previewURL ?? $user?.photoURL ?? '/userDefaultIcon.webp'}
+                src={previewURL ?? $user?.photoURL ?? '/userdefault.webp'}
                 alt="photoURL"
                 width="256"
                 height="256"
