@@ -1,20 +1,22 @@
 import type { PageServerLoad } from "./$types";
 import { adminAuth, adminDB } from "$lib/server/admin";
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
-export const load = (async ({ cookies }) => {
-
-    const sessionCookie = cookies.get('__session');
-
-    try {
-        const verifySession = await adminAuth.verifySessionCookie(sessionCookie!);
-        const userDoc = await adminDB.collection('users').doc(verifySession.uid).get();
-        const userData = userDoc.data();
-
-        return {
-            bio: userData?.bio,
-        }
-    } catch (e) {
-        throw error(401, 'Unauthorized request!')
+export const load = (async ({ locals, params }) => {
+    const uid = locals.userID;
+    
+    if(!uid) {
+        throw redirect(301, "/login");
     }
+
+    const userDoc = await adminDB.collection("users").doc(uid!).get();
+    const { username, bio } = userDoc.data()!;
+
+    if(params.username !== username) {
+        throw error(401, "Unauthorized access");
+    }
+
+    return {
+        bio,
+    };
 }) satisfies PageServerLoad;
