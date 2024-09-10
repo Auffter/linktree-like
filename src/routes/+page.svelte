@@ -1,5 +1,5 @@
 <script>
-    import { userData, user } from "$lib/firebase";
+    import { userData } from "$lib/firebase";
 </script>
 
 <a href="/login" class="btn btn-blue">Login</a>
@@ -12,4 +12,3 @@
         </li>
     </ul>
 {/if}
-
