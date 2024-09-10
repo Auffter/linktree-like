@@ -1,7 +1,7 @@
 import { adminAuth } from "$lib/server/admin";
 import type { Handle } from "@sveltejs/kit";
 
-export const handleCookiesAuth = (async ({event , resolve}) => {
+export const handle = (async ({event , resolve}) => {
     
     const sessionCookie = event.cookies.get('__session');
 
@@ -9,6 +9,7 @@ export const handleCookiesAuth = (async ({event , resolve}) => {
         const verifySession = await adminAuth.verifySessionCookie(sessionCookie!);
         // Setting id on local event object to be used in any other server.ts file
         event.locals.userID = verifySession.uid;
+        console.log("User ID: ", verifySession.uid);
     } catch (e) {
         event.locals.userID = null;
         return resolve(event);
